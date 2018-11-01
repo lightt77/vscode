@@ -3,8 +3,6 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-'use strict';
-
 import 'vs/css!./contextMenuHandler';
 
 import { combinedDisposable, IDisposable, dispose } from 'vs/base/common/lifecycle';
@@ -89,7 +87,7 @@ export class ContextMenuHandler {
 
 					menu.onDidCancel(() => this.contextViewService.hideContextView(true), null, menuDisposables);
 					menu.onDidBlur(() => this.contextViewService.hideContextView(true), null, menuDisposables);
-					domEvent(window, EventType.BLUR)(() => { this.contextViewService.hideContextView(true); }, menuDisposables);
+					domEvent(window, EventType.BLUR)(() => { this.contextViewService.hideContextView(true); }, null, menuDisposables);
 
 					menu.focus(!!delegate.autoSelectFirstItem);
 

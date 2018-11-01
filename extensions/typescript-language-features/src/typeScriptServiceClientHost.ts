@@ -14,7 +14,7 @@ import FileConfigurationManager from './features/fileConfigurationManager';
 import LanguageProvider from './languageProvider';
 import * as Proto from './protocol';
 import * as PConst from './protocol.const';
-import TypeScriptServiceClient from './typescriptServiceClient';
+import TypeScriptServiceClient, { PluginConfigProvider } from './typescriptServiceClient';
 import API from './utils/api';
 import { CommandManager } from './utils/commandManager';
 import { Disposable } from './utils/dispose';
@@ -49,6 +49,7 @@ export default class TypeScriptServiceClientHost extends Disposable {
 		descriptions: LanguageDescription[],
 		workspaceState: vscode.Memento,
 		plugins: TypeScriptServerPlugin[],
+		pluginConfigProvider: PluginConfigProvider,
 		private readonly commandManager: CommandManager,
 		logDirectoryProvider: LogDirectoryProvider
 	) {
@@ -72,6 +73,7 @@ export default class TypeScriptServiceClientHost extends Disposable {
 			workspaceState,
 			version => this.versionStatus.onDidChangeTypeScriptVersion(version),
 			plugins,
+			pluginConfigProvider,
 			logDirectoryProvider,
 			allModeIds));
 
@@ -103,7 +105,7 @@ export default class TypeScriptServiceClientHost extends Disposable {
 
 		this.client.ensureServiceStarted();
 		this.client.onReady(() => {
-			if (!this.client.apiVersion.gte(API.v230)) {
+			if (this.client.apiVersion.lt(API.v230)) {
 				return;
 			}
 
